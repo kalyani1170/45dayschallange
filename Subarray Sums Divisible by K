@@ -1,0 +1,27 @@
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+int subarraysDivByK(vector<int>& nums, int k) {
+    int count = 0;
+    int prefix_sum = 0;
+    unordered_map<int, int> mod_map = {{0, 1}};
+    
+    for (int num : nums) {
+        prefix_sum += num;
+        int mod = prefix_sum % k;
+        
+        // To handle negative mod values
+        if (mod < 0) {
+            mod += k;
+        }
+        
+        if (mod_map.find(mod) != mod_map.end()) {
+            count += mod_map[mod];
+        }
+        
+        mod_map[mod]++;
+    }
+    
+    return count;
+}
