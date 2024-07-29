@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+class Solution {
+public:
+    std::vector<std::vector<int>> threeSum(int* nums, int size) {
+        std::vector<std::vector<int>> result;
+        
+        // Sort the array
+        std::sort(nums, nums + size);
+        
+        for (int i = 0; i < size; ++i) {
+            // Skip the same element to avoid duplicates in the result
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            
+            // Two-pointer approach
+            int left = i + 1;
+            int right = size - 1;
+            
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                
+                if (sum == 0) {
+                    // Found a triplet
+                    result.push_back({nums[i], nums[left], nums[right]});
+                    
+                    // Skip duplicates for left pointer
+                    while (left < right && nums[left] == nums[left + 1]) {
+                        ++left;
+                    }
+                    
+                    // Skip duplicates for right pointer
+                    while (left < right && nums[right] == nums[right - 1]) {
+                        --right;
+                    }
+                    
+                    // Move the pointers after adding the triplet to result
+                    ++left;
+                    --right;
+                } else if (sum < 0) {
+                    ++left;
+                } else {
+                    --right;
+                }
+            }
+        }
+        
+        return result;
+    }
+};
+
+int main() {
+    Solution solution;
+    int nums[] = {-1, 0, 1, 2, -1, -4};
+    int size = sizeof(nums) / sizeof(nums[0]);
+    
+    std::vector<std::vector<int>> result = solution.threeSum(nums, size);
+    
+    for (const auto& triplet : result) {
+        std::cout << "[";
+        for (size_t i = 0; i < triplet.size(); ++i) {
+            std::cout << triplet[i];
+            if (i < triplet.size() - 1) std::cout << ", ";
+        }
+        std::cout << "]" << std::endl;
+    }
+    
+    return 0;
+}
